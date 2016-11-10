@@ -1,0 +1,10 @@
+<component name="libraryTable">
+  <library name="apache_httpcomponents">
+    <CLASSES>
+      <root url="file://$USER_HOME$/doc/school/AKS/httpcomponents-client-4.5.2/lib" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/doc/school/AKS/httpcomponents-client-4.5.2/lib" recursive="false" />
+  </library>
+</component>

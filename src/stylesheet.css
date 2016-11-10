@@ -1,0 +1,9 @@
+node.switch {
+    size: 20px;
+    fill-color: deepskyblue;
+}
+
+node.host {
+    size: 15px;
+    fill-color: black;
+}
