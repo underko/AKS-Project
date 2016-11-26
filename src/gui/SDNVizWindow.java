@@ -1,5 +1,6 @@
 package gui;
 
+
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
@@ -7,6 +8,7 @@ import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 import sdntools.SDNNetwork;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -106,6 +108,7 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnLoad = new JButton("Load");
         btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
                 Start();
             }
         });
