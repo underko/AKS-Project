@@ -1,5 +1,5 @@
-# AKS-SDN
-AKS SDN project
+# AKS-Project
+AKS SDN Semestral Project
 
 Libraries used in the project:
 - graphstream 1.3 (http://graphstream-project.org/download/)
