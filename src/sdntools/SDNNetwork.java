@@ -30,6 +30,61 @@ public class SDNNetwork {
         this.CreateSDNNetwork();
     }
 
+    public String GetFormattedInfoSDNSwitch(String guid) {
+        SDNSwitch s = GetSDNSwitch(guid);
+
+        if (s == null) { return "Object not found."; }
+        String port_string = "";
+
+        for (SDNPort p: s.GetPortList()) {
+            String port_info = String.format(
+                    "Name:\n" +
+                    "%s\n" +
+                    "HW Address:\n" +
+                    "%s\n" +
+                    "Port number:\n" +
+                    "%s\n" +
+                    "DPID:\n" +
+                    "%s\n",
+                    p.getName(),
+                    p.getHwAddr(),
+                    p.getPortNo(),
+                    p.getDPID()
+            );
+
+            port_string += port_info;
+        }
+
+        String out = String.format(
+                "GUID:\n" +
+                "%s\n" +
+                "Ports:\n" +
+                "%s\n",
+                s.GetDPID(),
+                port_string
+        );
+
+        return out;
+    }
+
+    private SDNSwitch GetSDNSwitch(String guid) {
+        for (SDNSwitch s : switch_list) {
+            if (s.GetDPID().equals(guid)) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    private SDNHost GetSDNHost(String mac) {
+        for (SDNHost h : host_list) {
+            if (h.getMac().equals(mac)) {
+                return h;
+            }
+        }
+        return null;
+    }
+
     private void CreateSDNNetwork () {
         this.LoadSDNNetwork();
         this.DrawDNSNetwork();

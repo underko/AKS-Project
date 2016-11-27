@@ -29,6 +29,7 @@ public class SDNVizWindow implements ViewerListener {
     private JTextField hostIpTF;
     private JTextField defGateTF;
     private JTextField hostPortTf;
+    private JTextArea textProperties;
 
     private Graph graph;
     private SDNNetwork sdn_network;
@@ -87,6 +88,7 @@ public class SDNVizWindow implements ViewerListener {
 
     public void buttonPushed(String id) {
         System.out.println("Button pushed on node " + id);
+        this.textProperties.setText(sdn_network.GetFormattedInfoSDNSwitch(id));
     }
 
     public void buttonReleased(String id) {
@@ -183,7 +185,7 @@ public class SDNVizWindow implements ViewerListener {
         scrollPane.setBounds(10, 52, 235, 313);
         frame.getContentPane().add(scrollPane);
 
-        JTextArea textProperties = new JTextArea();
+        textProperties = new JTextArea();
         textProperties.setEditable(false);
         scrollPane.setViewportView(textProperties);
 
