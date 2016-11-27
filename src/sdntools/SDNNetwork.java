@@ -67,6 +67,55 @@ public class SDNNetwork {
         return out;
     }
 
+    public String GetFormattedInfoSDNHost(String mac) {
+        SDNHost h = GetSDNHost(mac);
+
+        if (h == null) { return "Object not found."; }
+
+        String ipv4_text = "";
+        String ipv6_text = "";
+
+        for (String ip: h.getIpv4()) {
+            ipv4_text += ip + "\n";
+        }
+
+        for (String ip: h.getIpv6()) {
+            ipv6_text += ip + "\n";
+        }
+
+        String port_info = String.format(
+                "Name:\n" +
+                "%s\n" +
+                "HW Address:\n" +
+                "%s\n" +
+                "Port number:\n" +
+                "%s\n" +
+                "DPID:\n" +
+                "%s\n",
+                h.getPort().getName(),
+                h.getPort().getHwAddr(),
+                h.getPort().getPortNo(),
+                h.getPort().getDPID()
+        );
+
+        String out = String.format(
+                "MAC:\n" +
+                "%s\n" +
+                "Port:\n" +
+                "%s\n" +
+                "IPv4:\n" +
+                "%s\n" +
+                "IPv6:\n" +
+                "%s\n",
+                h.getMac(),
+                port_info,
+                ipv4_text,
+                ipv6_text
+        );
+
+        return out;
+    }
+
     private SDNSwitch GetSDNSwitch(String guid) {
         for (SDNSwitch s : switch_list) {
             if (s.GetDPID().equals(guid)) {

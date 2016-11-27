@@ -88,7 +88,16 @@ public class SDNVizWindow implements ViewerListener {
 
     public void buttonPushed(String id) {
         System.out.println("Button pushed on node " + id);
-        this.textProperties.setText(sdn_network.GetFormattedInfoSDNSwitch(id));
+
+        // check if if contains ":", then it is a host
+        if (id.contains(":")) {
+            this.txtSwitch.setText("Host");
+            this.textProperties.setText(sdn_network.GetFormattedInfoSDNHost(id));
+        }
+        else {
+            this.txtSwitch.setText("Switch");
+            this.textProperties.setText(sdn_network.GetFormattedInfoSDNSwitch(id));
+        }
     }
 
     public void buttonReleased(String id) {
