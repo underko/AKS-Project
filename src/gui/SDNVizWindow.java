@@ -8,6 +8,7 @@ import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
 import sdntools.SDNNetwork;
+import sdntools.X11Forwarding;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +31,12 @@ public class SDNVizWindow implements ViewerListener {
     private JTextField defGateTF;
     private JTextField hostPortTf;
     private JTextArea textProperties;
+    private JTextField cmdTF;
+    private JTextArea controllerArea;
+    private JTextArea ryuArea;
+    private JTextArea cmdArea;
+    private JTextField controllerTF;
+    private JTextField ryuTF;
 
     private Graph graph;
     private SDNNetwork sdn_network;
@@ -106,13 +113,13 @@ public class SDNVizWindow implements ViewerListener {
 
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 733, 515);
+        frame.setBounds(100, 100, 727, 684);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(null);
 
         urlAddrTF = new JTextField();
-        urlAddrTF.setBounds(95, 409, 205, 20);
-        urlAddrTF.setText(myUrl);
+        urlAddrTF.setBounds(95, 613, 205, 20);
+         urlAddrTF.setText(myUrl);
         frame.getContentPane().add(urlAddrTF);
         urlAddrTF.setColumns(10);
 
@@ -120,19 +127,19 @@ public class SDNVizWindow implements ViewerListener {
         btnLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
 
-                Start();
+                      Start();
             }
         });
-        btnLoad.setBounds(325, 408, 97, 23);
+        btnLoad.setBounds(325, 612, 97, 23);
         frame.getContentPane().add(btnLoad);
 
         btnReset = new JButton("Reset");
         btnReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                Reset();
+                    Reset();
             }
         });
-        btnReset.setBounds(432, 408, 90, 23);
+        btnReset.setBounds(432, 612, 90, 23);
         frame.getContentPane().add(btnReset);
 
         JButton btnPing = new JButton("Ping");
@@ -176,7 +183,7 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(btnRoutGate);
 
         JLabel lblNewLabel = new JLabel("URL:");
-        lblNewLabel.setBounds(10, 412, 46, 14);
+        lblNewLabel.setBounds(10, 616, 46, 14);
         frame.getContentPane().add(lblNewLabel);
 
         txtSwitch = new JTextField();
@@ -191,7 +198,7 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(lblRoutingIp);
 
         JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBounds(10, 52, 235, 313);
+        scrollPane.setBounds(10, 52, 235, 420);
         frame.getContentPane().add(scrollPane);
 
         textProperties = new JTextArea();
@@ -199,12 +206,12 @@ public class SDNVizWindow implements ViewerListener {
         scrollPane.setViewportView(textProperties);
 
         JLabel lblRootingPath = new JLabel("Rooting Path");
-        lblRootingPath.setBounds(10, 376, 77, 14);
+        lblRootingPath.setBounds(10, 580, 77, 14);
         frame.getContentPane().add(lblRootingPath);
 
         routPathTF = new JTextField();
         routPathTF.setEditable(false);
-        routPathTF.setBounds(95, 373, 519, 20);
+        routPathTF.setBounds(95, 577, 519, 20);
         frame.getContentPane().add(routPathTF);
         routPathTF.setColumns(10);
 
@@ -244,13 +251,6 @@ public class SDNVizWindow implements ViewerListener {
         lblDest.setBounds(420, 183, 77, 14);
         frame.getContentPane().add(lblDest);
 
-        JScrollPane scrollPane_1 = new JScrollPane();
-        scrollPane_1.setBounds(255, 208, 359, 155);
-        frame.getContentPane().add(scrollPane_1);
-
-        JTextArea textArea_1 = new JTextArea();
-        scrollPane_1.setViewportView(textArea_1);
-
         JLabel label = new JLabel("Host IP");
         label.setBounds(255, 14, 47, 14);
         frame.getContentPane().add(label);
@@ -277,5 +277,78 @@ public class SDNVizWindow implements ViewerListener {
         hostPortTf.setColumns(10);
         hostPortTf.setBounds(533, 12, 70, 20);
         frame.getContentPane().add(hostPortTf);
+
+        JScrollPane scrollPane_2 = new JScrollPane();
+        scrollPane_2.setBounds(675, 418, 111, -154);
+        frame.getContentPane().add(scrollPane_2);
+
+        JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+        tabbedPane.setBounds(255, 211, 435, 355);
+        frame.getContentPane().add(tabbedPane);
+
+        JPanel panel = new JPanel();
+        tabbedPane.addTab("Controller", null, panel, null);
+        panel.setLayout(null);
+
+        controllerTF = new JTextField();
+        controllerTF.setBounds(10, 11, 410, 20);
+        panel.add(controllerTF);
+        controllerTF.setColumns(10);
+
+        JScrollPane scrollPane_1 = new JScrollPane();
+        scrollPane_1.setBounds(10, 42, 410, 274);
+        panel.add(scrollPane_1);
+
+        controllerArea = new JTextArea();
+        controllerArea.setWrapStyleWord(true);
+        controllerArea.setLineWrap(true);
+        scrollPane_1.setViewportView(controllerArea);
+
+        JPanel panel_1 = new JPanel();
+        tabbedPane.addTab("Ryu", null, panel_1, null);
+        panel_1.setLayout(null);
+
+        ryuTF = new JTextField();
+        ryuTF.setBounds(10, 11, 410, 20);
+        panel_1.add(ryuTF);
+        ryuTF.setColumns(10);
+
+        JScrollPane scrollPane_3 = new JScrollPane();
+        scrollPane_3.setBounds(10, 42, 410, 274);
+        panel_1.add(scrollPane_3);
+
+        ryuArea = new JTextArea();
+        ryuArea.setLineWrap(true);
+        ryuArea.setWrapStyleWord(true);
+        scrollPane_3.setViewportView(ryuArea);
+
+        JPanel panel_2 = new JPanel();
+        tabbedPane.addTab("CMD", null, panel_2, null);
+        panel_2.setLayout(null);
+
+        cmdTF = new JTextField();
+        cmdTF.setBounds(10, 11, 410, 20);
+        panel_2.add(cmdTF);
+        cmdTF.setColumns(10);
+
+        JScrollPane scrollPane_4 = new JScrollPane();
+        scrollPane_4.setBounds(10, 42, 410, 274);
+        panel_2.add(scrollPane_4);
+
+        cmdArea = new JTextArea();
+        cmdArea.setWrapStyleWord(true);
+        cmdArea.setLineWrap(true);
+        scrollPane_4.setViewportView(cmdArea);
+
+        JButton mininetCmd = new JButton("SSH");
+        mininetCmd.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                X11Forwarding.runSSh(controllerTF, controllerArea);
+                X11Forwarding.runSSh(ryuTF,ryuArea);
+                X11Forwarding.runSSh(cmdTF,cmdArea);
+            }
+        });
+        mininetCmd.setBounds(545, 612, 141, 23);
+        frame.getContentPane().add(mininetCmd);
     }
 }
