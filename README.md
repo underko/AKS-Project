@@ -8,5 +8,6 @@ Libraries used in the project:
   - gs-ui
 - apache http components 4.5.2 (https://hc.apache.org/downloads.cgi)
 - java json (http://www.java2s.com/Code/Jar/j/Downloadjavajsonjar.htm)
+- JSCH (http://www.java2s.com/Code/Jar/c/Downloadcomjcraftjsch0131jar.htm)
 
 Requires Java 8
