@@ -4,8 +4,6 @@ import objects.SDNHost;
 import objects.SDNLink;
 import objects.SDNPort;
 import objects.SDNSwitch;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.graphstream.graph.Graph;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -301,9 +299,15 @@ public class SDNNetwork {
             System.out.println("Error while parsing links:\n" + e);
         }
     }
-    public void senSDNPost(String url,String ipAdd) throws IOException, JSONException {
+    public void sendRoutSDNPost(String url,String ipAdd) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.accumulate("address", ipAdd);
+        String json = jsonObject.toString();
+        sdn_connector.setSDNcommand(url,json);
+    }
+    public void sendGatewaySDNPost(String url,String ipAdd) throws IOException, JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.accumulate("gateway", ipAdd);
         String json = jsonObject.toString();
         sdn_connector.setSDNcommand(url,json);
     }
