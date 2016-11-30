@@ -1,12 +1,14 @@
 package gui;
 
 
+import objects.SDNHost;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.swingViewer.ViewPanel;
 import org.graphstream.ui.view.Viewer;
 import org.graphstream.ui.view.ViewerListener;
 import org.graphstream.ui.view.ViewerPipe;
+import org.json.JSONException;
 import sdntools.SDNNetwork;
 import sdntools.X11Forwarding;
 
@@ -14,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class SDNVizWindow implements ViewerListener {
 
@@ -42,20 +45,23 @@ public class SDNVizWindow implements ViewerListener {
     private SDNNetwork sdn_network;
     private Viewer viewer;
     private ViewPanel view;
-    private String myUrl = "http://192.168.1.25:8080";
+    private String myUrl = "http://192.168.0.115:8080";
+    private String selectedHost="";
+    private String selectedSwitchId;
 
     private SDNVizWindow() {
         initialize();
     }
 
     private void Start() {
+        loop=true;
         this.graph = new MultiGraph("Clicks");
         this.graph.addAttribute("ui.quality");
         this.graph.addAttribute("ui.antialias");
 
         this.sdn_network = new SDNNetwork(urlAddrTF.getText(), graph);
 
-        Viewer viewer = graph.display();
+        viewer = graph.display();
         viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
         ViewerPipe fromViewer = viewer.newViewerPipe();
         fromViewer.addViewerListener(this);
@@ -100,10 +106,13 @@ public class SDNVizWindow implements ViewerListener {
         if (id.contains(":")) {
             this.txtSwitch.setText("Host");
             this.textProperties.setText(sdn_network.GetFormattedInfoSDNHost(id));
+            SDNHost h =sdn_network.GetSDNHost(id);
+            this.selectedHost=Integer.parseInt(h.getPort().getDPID())+"";
         }
         else {
             this.txtSwitch.setText("Switch");
             this.textProperties.setText(sdn_network.GetFormattedInfoSDNSwitch(id));
+            this.selectedSwitchId=id;
         }
     }
 
@@ -153,6 +162,7 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnHost = new JButton("Send");
         btnHost.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                controllerTF.setText("py h"+selectedHost+".setIP('"+hostIpTF.getText()+"')\n");
             }
         });
         btnHost.setBounds(613, 11, 77, 23);
@@ -161,6 +171,7 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnDefGate = new JButton("Send");
         btnDefGate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
             }
         });
         btnDefGate.setBounds(613, 50, 77, 23);
@@ -169,6 +180,14 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnRoutAddr = new JButton("Send");
         btnRoutAddr.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+
+                try {
+                    sdn_network.senSDNPost("/router/"+selectedSwitchId,routAddrTF.getText());
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
             }
         });
         btnRoutAddr.setBounds(613, 102, 77, 23);

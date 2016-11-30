@@ -1,14 +1,17 @@
 package sdntools;
 
-import java.io.IOException;
-import java.io.InputStream;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.json.JSONArray;
 import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.InputStream;
 
 class SDNConnector {
 
@@ -43,6 +46,18 @@ class SDNConnector {
         return null;
     }
 
+    public void setSDNcommand(String request_link,String jsonString) throws IOException {
+        HttpClient http_client = HttpClients.createDefault();
+        HttpPost http_post=new HttpPost(SDNUrl+request_link);
+        http_post.setHeader("Content-type", "application/json");
+        http_post.setEntity(new StringEntity(jsonString, "UTF-8"));
+
+
+        HttpResponse response = http_client.execute(http_post);
+        System.out.println("Response Code : "
+                + response.getStatusLine().getStatusCode());
+
+    }
     JSONArray GetSDNJsonArray(String sdn_path) {
         try {
             String json = GetSDNItem(sdn_path);

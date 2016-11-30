@@ -78,7 +78,7 @@ public class X11Forwarding{
                     JOptionPane.showConfirmDialog(null, ob, message,
                             JOptionPane.OK_CANCEL_OPTION);
             if(result==JOptionPane.OK_OPTION){
-                passwd=passwordField.getText();
+                passwd="mininet";
                 return true;
             }
             else{ return false; }

@@ -4,17 +4,43 @@ import objects.SDNHost;
 import objects.SDNLink;
 import objects.SDNPort;
 import objects.SDNSwitch;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 import org.graphstream.graph.Graph;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import javax.swing.*;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SDNNetwork {
     private SDNConnector sdn_connector;
     private Graph graph;
+
+    public ArrayList<SDNSwitch> getSwitch_list() {
+        return switch_list;
+    }
+
+    public void setSwitch_list(ArrayList<SDNSwitch> switch_list) {
+        this.switch_list = switch_list;
+    }
+
+    public ArrayList<SDNHost> getHost_list() {
+        return host_list;
+    }
+
+    public void setHost_list(ArrayList<SDNHost> host_list) {
+        this.host_list = host_list;
+    }
+
+    public ArrayList<SDNLink> getLink_list() {
+        return link_list;
+    }
+
+    public void setLink_list(ArrayList<SDNLink> link_list) {
+        this.link_list = link_list;
+    }
 
     private ArrayList<SDNSwitch> switch_list = new ArrayList<>();
     private ArrayList<SDNHost> host_list = new ArrayList<>();
@@ -23,6 +49,7 @@ public class SDNNetwork {
     private String SDNSwitches = "/v1.0/topology/switches";
     private String SDNHosts = "/v1.0/topology/hosts";
     private String SDNLinks = "/v1.0/topology/links";
+    private String SDNrouter = "";
 
     public SDNNetwork (String connection_url, Graph graph) {
         this.sdn_connector = new SDNConnector(connection_url);
@@ -116,6 +143,7 @@ public class SDNNetwork {
         return out;
     }
 
+
     private SDNSwitch GetSDNSwitch(String guid) {
         for (SDNSwitch s : switch_list) {
             if (s.GetDPID().equals(guid)) {
@@ -125,7 +153,7 @@ public class SDNNetwork {
         return null;
     }
 
-    private SDNHost GetSDNHost(String mac) {
+    public SDNHost GetSDNHost(String mac) {
         for (SDNHost h : host_list) {
             if (h.getMac().equals(mac)) {
                 return h;
@@ -272,5 +300,11 @@ public class SDNNetwork {
         catch (JSONException e) {
             System.out.println("Error while parsing links:\n" + e);
         }
+    }
+    public void senSDNPost(String url,String ipAdd) throws IOException, JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.accumulate("address", ipAdd);
+        String json = jsonObject.toString();
+        sdn_connector.setSDNcommand(url,json);
     }
 }
