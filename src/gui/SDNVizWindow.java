@@ -169,7 +169,8 @@ public class SDNVizWindow implements ViewerListener {
 
         JButton btnLoad = new JButton("Load");
         btnLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {Start();}
+            public void actionPerformed(ActionEvent e) {
+                Start();}
         });
         btnLoad.setBounds(325, 612, 97, 23);
         frame.getContentPane().add(btnLoad);
@@ -177,7 +178,7 @@ public class SDNVizWindow implements ViewerListener {
         btnReset = new JButton("Reset");
         btnReset.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                                    Reset();
+                Reset();
             }
         });
         btnReset.setBounds(432, 612, 90, 23);
@@ -194,7 +195,8 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnHost = new JButton("Send");
         btnHost.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-	                controllerTF.setText("py h"+selectedHost+".setIP('"+hostIpTF.getText()+"')\r\n");
+                controllerTF.setText("py h" + selectedHost + ".setIP('" + hostIpTF.getText() + "')");
+                controllerTF.postActionEvent();
             }
         });
         btnHost.setBounds(613, 11, 77, 23);
@@ -203,8 +205,8 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnDefGate = new JButton("Send");
         btnDefGate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-	                sendGatewayAddress();
-
+                controllerTF.setText("h" + selectedHost + " route add default gw " + defGateTF.getText());
+                controllerTF.postActionEvent();
             }
         });
         btnDefGate.setBounds(613, 50, 77, 23);
@@ -213,7 +215,6 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnRoutAddr = new JButton("Send");
         btnRoutAddr.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-
                 sendRoutAddress();
             }
         });
@@ -223,10 +224,12 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnRoutGate = new JButton("Send");
         btnRoutGate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                sendGatewayAddress();
             }
         });
         btnRoutGate.setBounds(613, 109, 77, 23);
         frame.getContentPane().add(btnRoutGate);
+
         JButton btnStatic = new JButton("Send");
         btnStatic.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
