@@ -123,7 +123,9 @@ public class SDNVizWindow implements ViewerListener {
     }
     public void sendRoutAddress(){
         try {
-            sdn_network.sendRoutSDNPost("/router/"+selectedSwitchId,routAddrTF.getText());
+            String[] key={"address"};
+            String[] value={routAddrTF.getText()};
+            sdn_network.sendSDNPost("/router/" + selectedSwitchId, key,value);
         } catch (IOException e1) {
             e1.printStackTrace();
         } catch (JSONException e1) {
@@ -132,14 +134,27 @@ public class SDNVizWindow implements ViewerListener {
     }
     public void sendGatewayAddress(){
         try {
-            sdn_network.sendRoutSDNPost("/router/"+selectedSwitchId,routGateTF.getText());
+            String[] key={"gateway"};
+            String[] value={routGateTF.getText()};
+            sdn_network.sendSDNPost("/router/" + selectedSwitchId, key,value);
         } catch (IOException e1) {
             e1.printStackTrace();
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
     }
+    public void sendStaticRout(){
+        try {
+            String[] key={"destination","gateway"};
+            String[] value={destRoutTF.getText(),gateTF.getText()};
+            sdn_network.sendSDNPost("/router/" + selectedSwitchId, key,value);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (JSONException e1) {
+            e1.printStackTrace();
+        }
 
+    }
     private void initialize() {
         frame = new JFrame();
         frame.setBounds(100, 100, 727, 684);
@@ -154,10 +169,7 @@ public class SDNVizWindow implements ViewerListener {
 
         JButton btnLoad = new JButton("Load");
         btnLoad.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-
-	                      Start();
-            }
+            public void actionPerformed(ActionEvent e) {Start();}
         });
         btnLoad.setBounds(325, 612, 97, 23);
         frame.getContentPane().add(btnLoad);
@@ -182,7 +194,7 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnHost = new JButton("Send");
         btnHost.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-	                controllerTF.setText("py h"+selectedHost+".setIP('"+hostIpTF.getText()+"')\n");
+	                controllerTF.setText("py h"+selectedHost+".setIP('"+hostIpTF.getText()+"')\r\n");
             }
         });
         btnHost.setBounds(613, 11, 77, 23);
@@ -218,6 +230,7 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnStatic = new JButton("Send");
         btnStatic.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                sendStaticRout();
             }
         });
         btnStatic.setBounds(613, 158, 77, 23);
@@ -384,9 +397,9 @@ public class SDNVizWindow implements ViewerListener {
         JButton mininetCmd = new JButton("SSH");
         mininetCmd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                               X11Forwarding.runSSh(controllerTF, controllerArea);
-                                X11Forwarding.runSSh(ryuTF,ryuArea);
-                           X11Forwarding.runSSh(cmdTF,cmdArea);
+                X11Forwarding.runSSh(controllerTF, controllerArea);
+                X11Forwarding.runSSh(ryuTF,ryuArea);
+                X11Forwarding.runSSh(cmdTF,cmdArea);
             }
         });
         mininetCmd.setBounds(545, 612, 141, 23);

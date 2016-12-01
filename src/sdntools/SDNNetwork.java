@@ -299,16 +299,14 @@ public class SDNNetwork {
             System.out.println("Error while parsing links:\n" + e);
         }
     }
-    public void sendRoutSDNPost(String url,String ipAdd) throws IOException, JSONException {
+
+    public void sendSDNPost(String url,String[] key,String[] ipAdd) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.accumulate("address", ipAdd);
+        for(int i=0;i<key.length;i++){
+            jsonObject.accumulate(key[i], ipAdd[i]);
+        }
         String json = jsonObject.toString();
         sdn_connector.setSDNcommand(url,json);
     }
-    public void sendGatewaySDNPost(String url,String ipAdd) throws IOException, JSONException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.accumulate("gateway", ipAdd);
-        String json = jsonObject.toString();
-        sdn_connector.setSDNcommand(url,json);
-    }
+
 }
