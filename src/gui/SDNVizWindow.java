@@ -245,12 +245,13 @@ public class SDNVizWindow implements ViewerListener {
 
         txtSwitch = new JTextField();
         txtSwitch.setEditable(false);
-        txtSwitch.setText("Switch/Host");
+        txtSwitch.setText("Load graph and select a node");
         txtSwitch.setBounds(10, 11, 235, 20);
         frame.getContentPane().add(txtSwitch);
         txtSwitch.setColumns(10);
 
         JLabel lblRoutingIp = new JLabel("Info");
+        lblRoutingIp.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblRoutingIp.setBounds(10, 39, 97, 14);
         frame.getContentPane().add(lblRoutingIp);
 
@@ -263,6 +264,7 @@ public class SDNVizWindow implements ViewerListener {
         scrollPane.setViewportView(textProperties);
 
         JLabel lblRootingPath = new JLabel("Rooting Path");
+        lblRootingPath.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblRootingPath.setBounds(10, 580, 77, 14);
         frame.getContentPane().add(lblRootingPath);
 
@@ -272,16 +274,18 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(routPathTF);
         routPathTF.setColumns(10);
 
-        JLabel lblRootAddress = new JLabel("Rout Address");
-        lblRootAddress.setBounds(255, 88, 94, 14);
-        frame.getContentPane().add(lblRootAddress);
+        JLabel lblRoutAddress = new JLabel("Router Address");
+        lblRoutAddress.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
+        lblRoutAddress.setBounds(255, 88, 94, 14);
+        frame.getContentPane().add(lblRoutAddress);
 
         routAddrTF = new JTextField();
         routAddrTF.setBounds(387, 85, 197, 20);
         frame.getContentPane().add(routAddrTF);
         routAddrTF.setColumns(10);
 
-        JLabel lblRoutGateway = new JLabel("Rout Gateway");
+        JLabel lblRoutGateway = new JLabel("Router Gateway");
+        lblRoutGateway.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblRoutGateway.setBounds(255, 113, 94, 14);
         frame.getContentPane().add(lblRoutGateway);
 
@@ -301,14 +305,17 @@ public class SDNVizWindow implements ViewerListener {
         destTF.setColumns(10);
 
         JLabel lblSource = new JLabel("Source");
+        lblSource.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblSource.setBounds(10, 486, 60, 14);
         frame.getContentPane().add(lblSource);
 
         JLabel lblDest = new JLabel("Destination");
+        lblDest.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblDest.setBounds(10, 517, 77, 14);
         frame.getContentPane().add(lblDest);
 
         JLabel label = new JLabel("Host IP");
+        label.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         label.setBounds(255, 14, 47, 14);
         frame.getContentPane().add(label);
 
@@ -318,6 +325,7 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(hostIpTF);
 
         JLabel label_1 = new JLabel("Defaul Gateway");
+        label_1.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         label_1.setBounds(256, 53, 121, 14);
         frame.getContentPane().add(label_1);
 
@@ -327,6 +335,7 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(defGateTF);
 
         JLabel label_2 = new JLabel("HostPort");
+        label_2.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         label_2.setBounds(469, 14, 53, 14);
         frame.getContentPane().add(label_2);
 
@@ -401,18 +410,20 @@ public class SDNVizWindow implements ViewerListener {
         mininetCmd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 X11Forwarding.runSSh(controllerTF, controllerArea);
-                X11Forwarding.runSSh(ryuTF,ryuArea);
-                X11Forwarding.runSSh(cmdTF,cmdArea);
+                X11Forwarding.runSSh(ryuTF, ryuArea);
+                X11Forwarding.runSSh(cmdTF, cmdArea);
             }
         });
         mininetCmd.setBounds(545, 612, 141, 23);
         frame.getContentPane().add(mininetCmd);
 
         JLabel lblDestination = new JLabel("Destination");
+        lblDestination.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblDestination.setBounds(255, 141, 77, 14);
         frame.getContentPane().add(lblDestination);
 
         JLabel lblGateway = new JLabel("Gateway");
+        lblGateway.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblGateway.setBounds(432, 141, 65, 14);
         frame.getContentPane().add(lblGateway);
 
@@ -425,7 +436,5 @@ public class SDNVizWindow implements ViewerListener {
         gateTF.setColumns(10);
         gateTF.setBounds(432, 159, 133, 20);
         frame.getContentPane().add(gateTF);
-
-
     }
 }
