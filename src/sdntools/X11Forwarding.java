@@ -1,7 +1,6 @@
 package sdntools;/* -*-mode:java; c-basic-offset:2; indent-tabs-mode:nil -*- */
 
 import com.jcraft.jsch.*;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,10 +10,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.net.*;
+import java.io.*;
 
 public class X11Forwarding{
 
-    public static void runSSh(JTextField textField,JTextArea jpane){
+    public static void runSSh(JTextField textField, JTextArea jpane, String URLAddress){
 
         String xhost="127.0.0.1";
         int xport=0;
@@ -22,9 +23,12 @@ public class X11Forwarding{
         try{
             JSch jsch=new JSch();
 
-            String host=null;
-
-            host=JOptionPane.showInputDialog("Enter username@hostname", "mininet"+ "@192.168.0.115");
+            String host;
+            URL sdn_url = new URL(URLAddress);
+            host = JOptionPane.showInputDialog(
+                    "Enter username@hostname",
+                    String.format("mininet@%s", sdn_url.getHost())
+            );
 
             String user=host.substring(0, host.indexOf('@'));
             host=host.substring(host.indexOf('@')+1);

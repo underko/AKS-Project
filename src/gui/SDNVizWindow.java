@@ -1,6 +1,5 @@
 package gui;
 
-
 import objects.SDNHost;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
@@ -17,6 +16,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.*;
+import java.io.*;
 
 public class SDNVizWindow implements ViewerListener {
 
@@ -47,7 +48,12 @@ public class SDNVizWindow implements ViewerListener {
     private SDNNetwork sdn_network;
     private Viewer viewer;
     private ViewPanel view;
-    private String myUrl = "http://192.168.0.115:8080";
+
+    public String GetURLString() {
+        return myUrl;
+    }
+
+    private String myUrl = "http://192.168.100.5:8080";
     private String selectedHost="";
     private String selectedSwitchId;
 
@@ -56,7 +62,7 @@ public class SDNVizWindow implements ViewerListener {
     }
 
     private void Start() {
-        loop=true;
+        loop = true;
         this.graph = new MultiGraph("Clicks");
         this.graph.addAttribute("ui.quality");
         this.graph.addAttribute("ui.antialias");
@@ -187,6 +193,9 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnPing = new JButton("Ping");
         btnPing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                // TODO: 12/4/16 add ping functionality, possibly use ping -R if supported
+                controllerTF.setText(String.format("%s ping -c 1 %s", sourceTF, destTF));
+                controllerTF.postActionEvent();
             }
         });
         btnPing.setBounds(10, 542, 77, 23);
@@ -294,11 +303,13 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(routGateTF);
         routGateTF.setColumns(10);
 
+        // PING source field
         sourceTF = new JTextField();
         sourceTF.setBounds(97, 483, 77, 20);
         frame.getContentPane().add(sourceTF);
         sourceTF.setColumns(10);
 
+        // PING destination field
         destTF = new JTextField();
         destTF.setBounds(97, 514, 77, 20);
         frame.getContentPane().add(destTF);
@@ -409,9 +420,9 @@ public class SDNVizWindow implements ViewerListener {
         JButton mininetCmd = new JButton("SSH");
         mininetCmd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                X11Forwarding.runSSh(controllerTF, controllerArea);
-                X11Forwarding.runSSh(ryuTF, ryuArea);
-                X11Forwarding.runSSh(cmdTF, cmdArea);
+                X11Forwarding.runSSh(controllerTF, controllerArea, myUrl);
+                X11Forwarding.runSSh(ryuTF, ryuArea, myUrl);
+                X11Forwarding.runSSh(cmdTF, cmdArea, myUrl);
             }
         });
         mininetCmd.setBounds(545, 612, 141, 23);
