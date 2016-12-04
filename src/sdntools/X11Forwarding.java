@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.net.*;
@@ -30,10 +31,10 @@ public class X11Forwarding{
                     String.format("mininet@%s", sdn_url.getHost())
             );
 
-            String user=host.substring(0, host.indexOf('@'));
-            host=host.substring(host.indexOf('@')+1);
+            String user = host.substring(0, host.indexOf('@'));
+            host = host.substring(host.indexOf('@') + 1);
 
-            Session session=jsch.getSession(user, host, 22);
+            Session session = jsch.getSession(user, host, 22);
 
 
             session.setX11Host(xhost);
@@ -52,6 +53,53 @@ public class X11Forwarding{
             channel.setOutputStream(new CustomOutputStream(jpane));
 
             channel.connect();
+        }
+        catch(Exception e){
+            System.out.println(e);
+        }
+    }
+
+    public static void runSerialSSh(ArrayList<JTextField> JTextFieldArray, ArrayList<JTextArea> JTextAreaArray, String URLAddress){
+
+        String xhost="127.0.0.1";
+        int xport=0;
+
+        try{
+            JSch jsch=new JSch();
+
+            String host;
+            URL sdn_url = new URL(URLAddress);
+            host = JOptionPane.showInputDialog(
+                    "Enter username@hostname",
+                    String.format("mininet@%s", sdn_url.getHost())
+            );
+
+            String user = host.substring(0, host.indexOf('@'));
+            host = host.substring(host.indexOf('@') + 1);
+
+            if (JTextFieldArray.size() != JTextAreaArray.size())
+                return;
+
+            for (int i = 0; i < JTextFieldArray.size(); i++) {
+                Session session = jsch.getSession(user, host, 22);
+
+                session.setX11Host(xhost);
+                session.setX11Port(xport+6000);
+
+                // username and password will be given via UserInfo interface.
+                UserInfo ui=new MyUserInfo();
+                session.setUserInfo(ui);
+                session.connect();
+
+                Channel channel=session.openChannel("shell");
+
+                channel.setXForwarding(true);
+
+                channel.setInputStream(new CustomInputStream(JTextFieldArray.get(i)));
+                channel.setOutputStream(new CustomOutputStream(JTextAreaArray.get(i)));
+
+                channel.connect();
+            }
         }
         catch(Exception e){
             System.out.println(e);

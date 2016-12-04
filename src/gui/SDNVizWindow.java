@@ -18,6 +18,7 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.*;
 import java.io.*;
+import java.util.ArrayList;
 
 public class SDNVizWindow implements ViewerListener {
 
@@ -420,9 +421,18 @@ public class SDNVizWindow implements ViewerListener {
         JButton mininetCmd = new JButton("SSH");
         mininetCmd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                X11Forwarding.runSSh(controllerTF, controllerArea, myUrl);
-                X11Forwarding.runSSh(ryuTF, ryuArea, myUrl);
-                X11Forwarding.runSSh(cmdTF, cmdArea, myUrl);
+                ArrayList<JTextField> text_field_list = new ArrayList<JTextField>();
+                ArrayList<JTextArea> text_area_list = new ArrayList<JTextArea>();
+
+                text_field_list.add(controllerTF);
+                text_field_list.add(ryuTF);
+                text_field_list.add(cmdTF);
+
+                text_area_list.add(controllerArea);
+                text_area_list.add(ryuArea);
+                text_area_list.add(cmdArea);
+
+                X11Forwarding.runSerialSSh(text_field_list, text_area_list, myUrl);
             }
         });
         mininetCmd.setBounds(545, 612, 141, 23);
