@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.net.*;
-import java.io.*;
 
 public class X11Forwarding{
 
@@ -38,14 +37,14 @@ public class X11Forwarding{
 
 
             session.setX11Host(xhost);
-            session.setX11Port(xport+6000);
+            session.setX11Port(xport + 6000);
 
             // username and password will be given via UserInfo interface.
-            UserInfo ui=new MyUserInfo();
+            UserInfo ui = new MyUserInfo();
             session.setUserInfo(ui);
             session.connect();
 
-            Channel channel=session.openChannel("shell");
+            Channel channel = session.openChannel("shell");
 
             channel.setXForwarding(true);
 
@@ -84,7 +83,7 @@ public class X11Forwarding{
                 Session session = jsch.getSession(user, host, 22);
 
                 session.setX11Host(xhost);
-                session.setX11Port(xport+6000);
+                session.setX11Port(xport + 6000);
 
                 // username and password will be given via UserInfo interface.
                 UserInfo ui=new MyUserInfo();

@@ -50,13 +50,12 @@ public class SDNVizWindow implements ViewerListener {
     private Viewer viewer;
     private ViewPanel view;
 
-    public String GetURLString() {
-        return myUrl;
-    }
-
     private String myUrl = "http://192.168.100.5:8080";
     private String selectedHost="";
     private String selectedSwitchId;
+
+    private String last_clicked_node = null;
+    private String second_last_clicked_node = null;
 
     private SDNVizWindow() {
         initialize();
@@ -110,6 +109,18 @@ public class SDNVizWindow implements ViewerListener {
 
     public void buttonPushed(String id) {
         System.out.println("Button pushed on node " + id);
+
+        // trackign last and second last clicked node
+        if (last_clicked_node == null)
+        {
+            last_clicked_node = id;
+            second_last_clicked_node = null;
+        }
+        else
+        {
+            second_last_clicked_node = last_clicked_node;
+            last_clicked_node = id;
+        }
 
         // check if if contains ":", then it is a host
         if (id.contains(":")) {
@@ -195,7 +206,10 @@ public class SDNVizWindow implements ViewerListener {
         btnPing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // TODO: 12/4/16 add ping functionality, possibly use ping -R if supported
-                controllerTF.setText(String.format("%s ping -c 1 %s", sourceTF, destTF));
+                if (sourceTF.getText().isEmpty() || destTF.getText().isEmpty()) {
+                    return;
+                }
+                controllerTF.setText(sourceTF.getText() + " ping -c 1 " + destTF.getText());
                 controllerTF.postActionEvent();
             }
         });
@@ -421,9 +435,10 @@ public class SDNVizWindow implements ViewerListener {
         JButton mininetCmd = new JButton("SSH");
         mininetCmd.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                ArrayList<JTextField> text_field_list = new ArrayList<JTextField>();
-                ArrayList<JTextArea> text_area_list = new ArrayList<JTextArea>();
+                ArrayList<JTextField> text_field_list = new ArrayList<>();
+                ArrayList<JTextArea> text_area_list = new ArrayList<>();
 
+                // these need to be aligned so they match in order
                 text_field_list.add(controllerTF);
                 text_field_list.add(ryuTF);
                 text_field_list.add(cmdTF);

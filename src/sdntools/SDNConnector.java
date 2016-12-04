@@ -19,7 +19,7 @@ class SDNConnector {
         this.SDNUrl = url;
     }
 
-    private String SDNUrl = "http://192.168.0.17:8080";
+    private String SDNUrl;
 
     private String GetSDNItem(String request_link){
         HttpClient http_client = HttpClients.createDefault();
