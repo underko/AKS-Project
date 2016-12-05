@@ -1,5 +1,6 @@
 package gui;
 
+
 import objects.SDNHost;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.implementations.MultiGraph;
@@ -16,8 +17,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.*;
-import java.io.*;
 import java.util.ArrayList;
 
 public class SDNVizWindow implements ViewerListener {
@@ -49,8 +48,7 @@ public class SDNVizWindow implements ViewerListener {
     private SDNNetwork sdn_network;
     private Viewer viewer;
     private ViewPanel view;
-
-    private String myUrl = "http://192.168.100.5:8080";
+    private String myUrl = "http://192.168.0.115:8080";
     private String selectedHost="";
     private String selectedSwitchId;
 
@@ -219,7 +217,12 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnHost = new JButton("Send");
         btnHost.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                controllerTF.setText("py h" + selectedHost + ".setIP('" + hostIpTF.getText() + "')");
+                if(hostPortTf.getText().equals("") ) {
+                    controllerTF.setText("py h" + selectedHost + ".setIP('" + hostIpTF.getText() + "')");
+                }
+                else{
+                    controllerTF.setText("py h" + hostPortTf.getText() + ".setIP('" + hostIpTF.getText() + "')");
+                }
                 controllerTF.postActionEvent();
             }
         });
@@ -229,7 +232,11 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnDefGate = new JButton("Send");
         btnDefGate.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                controllerTF.setText("h" + selectedHost + " route add default gw " + defGateTF.getText());
+                if(hostPortTf.getText().equals("") ) {
+                    controllerTF.setText("h" + selectedHost + " route add default gw " + defGateTF.getText());
+                }else {
+                    controllerTF.setText("h" + hostPortTf.getText() + " route add default gw " + defGateTF.getText());
+                }
                 controllerTF.postActionEvent();
             }
         });
@@ -324,7 +331,6 @@ public class SDNVizWindow implements ViewerListener {
         frame.getContentPane().add(sourceTF);
         sourceTF.setColumns(10);
 
-        // PING destination field
         destTF = new JTextField();
         destTF.setBounds(97, 514, 77, 20);
         frame.getContentPane().add(destTF);
@@ -472,5 +478,7 @@ public class SDNVizWindow implements ViewerListener {
         gateTF.setColumns(10);
         gateTF.setBounds(432, 159, 133, 20);
         frame.getContentPane().add(gateTF);
+
+
     }
 }

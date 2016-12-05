@@ -191,7 +191,7 @@ public class SDNNetwork {
             this.graph.getNode(hst.getMac()).addAttribute("ui.class", "host");
         }
 
-        this.graph.addAttribute("ui.stylesheet", "url('file:///home/martin/IdeaProjects/SDNViz/src/stylesheet.css')");
+        this.graph.addAttribute("ui.stylesheet", "url('file:///C:/Users/Toni/IdeaProjects/AKS-Project_new/src/stylesheet.css')");
     }
 
     private void LoadSDNSwitches() {
@@ -229,6 +229,7 @@ public class SDNNetwork {
 
     private void LoadSDNHosts() {
         JSONArray json_hosts = this.sdn_connector.GetSDNJsonArray(SDNHosts);
+        JSONArray json_tmp = this.sdn_connector.GetSDNJsonArray(SDNHosts);
         int hst_l = json_hosts.length();
 
         try {
@@ -256,11 +257,42 @@ public class SDNNetwork {
                         tmp_port_obj.getString("port_no"),
                         tmp_port_obj.getString("dpid")
                 );
-                SDNHost tmp_host = new SDNHost(tmp_port, tmp_mac, tmp_ipv4_arr, tmp_ipv6_arr);
+                if(tmp_port_obj.getString("name").contains("eth1")){
+                    SDNHost tmp_host = new SDNHost(tmp_port, tmp_mac, tmp_ipv4_arr, tmp_ipv6_arr);
 
-                System.out.print("Adding host mac: " + tmp_host.getMac());
-                System.out.println(" Connected to dpid: " + tmp_port.getDPID());
-                this.host_list.add(tmp_host);
+                    System.out.print("Adding host mac: " + tmp_host.getMac());
+                    System.out.println(" Connected to dpid: " + tmp_port.getDPID());
+                    this.host_list.add(tmp_host);
+                }
+                else{
+                    JSONObject tmp_link_json = json_hosts.getJSONObject(i);
+                    JSONObject tmp_link_src = tmp_link_json.getJSONObject("port");
+                    SDNPort tmp_dst=null;
+                    SDNPort tmp_src = new SDNPort(
+                            tmp_link_src.getString("hw_addr"),
+                            tmp_link_src.getString("name"),
+                            tmp_link_src.getString("port_no"),
+                            tmp_link_src.getString("dpid")
+                    );
+                    String mac=tmp_link_json.getString("mac");
+
+                    for(int m=0;m<hst_l;m++){
+                        JSONObject tmp_link_json2 = json_tmp.getJSONObject(m);
+                        JSONObject tmp_link_dsc = tmp_link_json2.getJSONObject("port");
+                        if(tmp_link_dsc.getString("hw_addr").equals(mac)){
+                            tmp_dst = new SDNPort(
+                                    tmp_link_dsc.getString("hw_addr"),
+                                    tmp_link_dsc.getString("name"),
+                                    tmp_link_dsc.getString("port_no"),
+                                    tmp_link_dsc.getString("dpid")
+                            );
+                            System.out.println(String.format("Adding link connecting %s and %s.", tmp_src.getDPID(), tmp_dst.getDPID()));
+                            SDNLink tmp_link = new SDNLink(tmp_src, tmp_dst);
+                            link_list.add(tmp_link);
+                            break;
+                        }
+                    }
+                }
             }
         }
         catch (JSONException e) {
