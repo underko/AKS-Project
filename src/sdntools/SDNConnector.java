@@ -42,7 +42,7 @@ class SDNConnector {
             System.out.println("Error getting http response:\n" + e);
         }
 
-        System.out.println("Error, something went wrong. Returning null.\n");
+        System.out.println("Error, something went wrong. Returning null.");
         return null;
     }
 

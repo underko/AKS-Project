@@ -84,12 +84,11 @@ public class SDNNetwork {
         for (SDNswitchRoute sr : s.getIp_default_list()) {
             String route_info = String.format(
                     "ID :" +
-                            "%s\n" +
-                            "Destination: " +
-                            "%s\n" +
-                            "Gateway: " +
-                            "%s\n",
-
+                    "%s\n" +
+                    "Destination: " +
+                    "%s\n" +
+                    "Gateway: " +
+                    "%s\n\n",
                     sr.getId(),
                     sr.getDestination(),
                     sr.getGateway()
@@ -98,7 +97,8 @@ public class SDNNetwork {
         }
         for (String str : s.getIp_list()) {
             String ip_info = String.format(
-                    "address: " + "%s\n",
+                    "address:\n" +
+                    "%s\n",
                     str
             );
             ip += ip_info;
@@ -106,19 +106,18 @@ public class SDNNetwork {
 
         String out = String.format(
                 "GUID:\n" +
-                "%s\n" +
+                "%s\n\n" +
                 "Ports:\n" +
-                        "%s\n" +
-                        "Route:\n" +
-                        "%s\n" +
-                        "Address:\n" +
-                        "%s\n",
+                "%s\n\n" +
+                "Route:\n" +
+                "%s\n\n" +
+                "Address:\n" +
+                "%s\n\n",
                 s.GetDPID(),
                 port_string,
                 route,
                 ip
         );
-
 
         return out;
     }
@@ -156,13 +155,13 @@ public class SDNNetwork {
 
         String out = String.format(
                 "MAC:\n" +
-                "%s\n" +
+                "%s\n\n" +
                 "Port:\n" +
-                "%s\n" +
+                "%s\n\n" +
                 "IPv4:\n" +
-                "%s\n" +
+                "%s\n\n" +
                 "IPv6:\n" +
-                "%s\n",
+                "%s\n\n",
                 h.getMac(),
                 port_info,
                 ipv4_text,
@@ -171,7 +170,6 @@ public class SDNNetwork {
 
         return out;
     }
-
 
     private SDNSwitch GetSDNSwitch(String guid) {
         for (SDNSwitch s : switch_list) {
@@ -242,7 +240,7 @@ public class SDNNetwork {
                     SDNSwitch tmp_switch = new SDNSwitch(dpid);
 
                     JSONArray jsonArray = this.sdn_connector.GetSDNJsonArray(SDNrouter + dpid);
-                    if (jsonArray.getJSONObject(0).has("internal_network")) {
+                    if (jsonArray != null && jsonArray.getJSONObject(0).has("internal_network")) {
                         JSONArray internalArr = jsonArray.getJSONObject(0).getJSONArray("internal_network");
                         if (internalArr.getJSONObject(0).has("route")) {
                             JSONArray json_route = internalArr.getJSONObject(0).getJSONArray("route");

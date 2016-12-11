@@ -48,8 +48,8 @@ public class SDNVizWindow implements ViewerListener {
     private SDNNetwork sdn_network;
     private Viewer viewer;
     private ViewPanel view;
-    private String myUrl = "http://192.168.100.5:8080";
-    private String selectedHost="";
+    private String default_url = "http://192.168.100.5:8080";
+    private String selectedHost = "";
     private String selectedSwitchId;
 
     private String last_clicked_node = null;
@@ -120,12 +120,12 @@ public class SDNVizWindow implements ViewerListener {
             last_clicked_node = id;
         }
 
-        // check if if contains ":", then it is a host
+        // check if id contains ":", then it is a host
         if (id.contains(":")) {
             this.txtSwitch.setText("Host");
             this.textProperties.setText(sdn_network.GetFormattedInfoSDNHost(id));
             SDNHost h =sdn_network.GetSDNHost(id);
-            this.selectedHost=Integer.parseInt(h.getPort().getDPID())+"";
+            this.selectedHost = h.getPort().getDPID();
         }
         else {
             this.txtSwitch.setText("Switch");
@@ -137,6 +137,7 @@ public class SDNVizWindow implements ViewerListener {
     public void buttonReleased(String id) {
         System.out.println("Button released on node " + id);
     }
+
     public void sendRoutAddress(){
         try {
             String[] key={"address"};
@@ -178,7 +179,7 @@ public class SDNVizWindow implements ViewerListener {
 
         urlAddrTF = new JTextField();
         urlAddrTF.setBounds(95, 613, 205, 20);
-	         urlAddrTF.setText(myUrl);
+	         urlAddrTF.setText(default_url);
         frame.getContentPane().add(urlAddrTF);
         urlAddrTF.setColumns(10);
 
@@ -293,7 +294,7 @@ public class SDNVizWindow implements ViewerListener {
         textProperties.setEditable(false);
         scrollPane.setViewportView(textProperties);
 
-        JLabel lblRootingPath = new JLabel("Rooting Path");
+        JLabel lblRootingPath = new JLabel("Routing Path");
         lblRootingPath.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         lblRootingPath.setBounds(10, 580, 77, 14);
         frame.getContentPane().add(lblRootingPath);
@@ -355,7 +356,7 @@ public class SDNVizWindow implements ViewerListener {
         hostIpTF.setBounds(321, 12, 133, 20);
         frame.getContentPane().add(hostIpTF);
 
-        JLabel label_1 = new JLabel("Defaul Gateway");
+        JLabel label_1 = new JLabel("Default Gateway");
         label_1.setFont(lblRoutingIp.getFont().deriveFont(10.0f));
         label_1.setBounds(256, 53, 121, 14);
         frame.getContentPane().add(label_1);
@@ -452,7 +453,7 @@ public class SDNVizWindow implements ViewerListener {
                 text_area_list.add(ryuArea);
                 text_area_list.add(cmdArea);
 
-                X11Forwarding.runSerialSSh(text_field_list, text_area_list, myUrl);
+                X11Forwarding.runSerialSSh(text_field_list, text_area_list, urlAddrTF.getText());
             }
         });
         mininetCmd.setBounds(545, 612, 141, 23);
