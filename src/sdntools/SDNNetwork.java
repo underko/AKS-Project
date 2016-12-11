@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class SDNNetwork {
@@ -221,15 +222,20 @@ public class SDNNetwork {
             this.graph.getNode(hst.getMac()).addAttribute("ui.class", "host");
         }
 
-        this.graph.addAttribute("ui.stylesheet", "url('file:///C:/Users/Toni/IdeaProjects/AKS-Project_new/src/stylesheet.css')");
+        String css_url = this.getClass().getResource("stylesheet.css").getPath();
+        css_url = "url('file://" + css_url + "')";
+        System.out.println("CSS: " + css_url);
+        this.graph.addAttribute("ui.stylesheet", css_url);
     }
 
     private void LoadSDNSwitches() {
-
-        JSONArray json_switches = this.sdn_connector.GetSDNJsonArray(SDNSwitches);
-        int swc_l = json_switches.length();
-
         try {
+            JSONArray json_switches = this.sdn_connector.GetSDNJsonArray(SDNSwitches);
+
+            if (json_switches == null) { throw new JSONException("JSON Array Empty"); }
+
+            int swc_l = json_switches.length();
+
             for (int i = 0; i < swc_l; i++) {
                 if (json_switches.getJSONObject(i).has("dpid")) {
                     String dpid = json_switches.getJSONObject(i).getString("dpid");
@@ -293,11 +299,14 @@ public class SDNNetwork {
     }
 
     private void LoadSDNHosts() {
-        JSONArray json_hosts = this.sdn_connector.GetSDNJsonArray(SDNHosts);
-        JSONArray json_tmp = this.sdn_connector.GetSDNJsonArray(SDNHosts);
-        int hst_l = json_hosts.length();
-
         try {
+            JSONArray json_hosts = this.sdn_connector.GetSDNJsonArray(SDNHosts);
+            JSONArray json_tmp = this.sdn_connector.GetSDNJsonArray(SDNHosts);
+
+            if (json_hosts == null || json_tmp == null) { throw new JSONException("JSON Array Empty"); }
+
+            int hst_l = json_hosts.length();
+
             for (int i = 0; i < hst_l; i++) {
                 JSONObject tmp_port_obj = new JSONObject(json_hosts.getJSONObject(i).get("port").toString());
                 String tmp_mac = json_hosts.getJSONObject(i).get("mac").toString();
@@ -366,10 +375,13 @@ public class SDNNetwork {
     }
 
     private void LoadSDNLinks() {
-        JSONArray json_links = this.sdn_connector.GetSDNJsonArray(SDNLinks);
-        int lnk_l = json_links.length();
-
         try {
+            JSONArray json_links = this.sdn_connector.GetSDNJsonArray(SDNLinks);
+
+            if (json_links == null) { throw new JSONException("JSON Array Empty"); }
+
+            int lnk_l = json_links.length();
+
             for (int i = 0; i < lnk_l; i++) {
                 JSONObject tmp_link_json = json_links.getJSONObject(i);
                 JSONObject tmp_link_src = tmp_link_json.getJSONObject("src");

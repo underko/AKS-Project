@@ -48,7 +48,7 @@ public class SDNVizWindow implements ViewerListener {
     private SDNNetwork sdn_network;
     private Viewer viewer;
     private ViewPanel view;
-    private String myUrl = "http://192.168.0.115:8080";
+    private String myUrl = "http://192.168.100.5:8080";
     private String selectedHost="";
     private String selectedSwitchId;
 
@@ -169,7 +169,6 @@ public class SDNVizWindow implements ViewerListener {
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
-
     }
     private void initialize() {
         frame = new JFrame();
