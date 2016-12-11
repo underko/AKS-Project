@@ -1,8 +1,5 @@
 package objects;
 
-/**
- * Created by Toni on 8. 12. 2016.
- */
 public class SDNswitchRoute {
     private int id;
     private String destination;
@@ -37,6 +34,5 @@ public class SDNswitchRoute {
     public void setDestination(String destination) {
         this.destination = destination;
     }
-
 
 }

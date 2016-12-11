@@ -5,6 +5,7 @@ import org.graphstream.graph.Graph;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -416,4 +417,11 @@ public class SDNNetwork {
         sdn_connector.setSDNcommand(url,json);
     }
 
+    public String getRoutingString(String src, String dst) {
+        String route_string = "";
+
+        // TODO: 12/12/16 Return String containing routing path
+
+        return route_string;
+    }
 }

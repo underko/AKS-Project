@@ -203,12 +203,14 @@ public class SDNVizWindow implements ViewerListener {
         JButton btnPing = new JButton("Ping");
         btnPing.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO: 12/4/16 add ping functionality, possibly use ping -R if supported
                 if (sourceTF.getText().isEmpty() || destTF.getText().isEmpty()) {
                     return;
                 }
                 controllerTF.setText(sourceTF.getText() + " ping -c 1 " + destTF.getText());
                 controllerTF.postActionEvent();
+
+                routPathTF.setText(sdn_network.getRoutingString(sourceTF.getText(), destTF.getText()));
+                // TODO: 12/12/16 set line color based on the routing line
             }
         });
         btnPing.setBounds(10, 542, 77, 23);
@@ -478,7 +480,5 @@ public class SDNVizWindow implements ViewerListener {
         gateTF.setColumns(10);
         gateTF.setBounds(432, 159, 133, 20);
         frame.getContentPane().add(gateTF);
-
-
     }
 }
