@@ -1,14 +1,13 @@
 package sdntools;
 
 import objects.*;
+import org.apache.commons.net.util.SubnetUtils;
 import org.graphstream.graph.Graph;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class SDNNetwork {
@@ -418,10 +417,96 @@ public class SDNNetwork {
     }
 
     public String getRoutingString(String src, String dst) {
-        String route_string = "";
+        String route_string = src + " - ";
+        SDNHost src_host = null;
+        SDNHost dst_host = null;
+        int src_id = 0;
+        int dst_id = 0;
+        switch (src) {
+            case "h1":
+                src_id = 1;
+                break;
+            case "h2":
+                src_id = 2;
+                break;
+            case "h3":
+                src_id = 3;
+                break;
+        }
+        switch (dst) {
+            case "h1":
+                dst_id = 1;
+                break;
+            case "h2":
+                dst_id = 2;
+                break;
+            case "h3":
+                dst_id = 3;
+                break;
+        }
+        for (SDNHost h : host_list) {
+            int id = Integer.parseInt(h.getPort().getDPID());
+            if (src_id == id) {
+                src_host = h;
+            }
+            if (dst_id == id) {
+                dst_host = h;
+            }
+        }
+
+        String src_ip = src_host.getIpv4().get(0);
+        String dst_ip = dst_host.getIpv4().get(0);
+        SDNSwitch sw = null;
+        boolean x = true;
+
+        while (x) {
+            for (SDNSwitch s : switch_list) {
+                for (String str : s.getIp_list()) {
+                    SubnetUtils utils = new SubnetUtils(str);
+                    if (utils.getInfo().isInRange(src_ip) && !route_string.contains(s.GetDPID())) {
+                        route_string += s.GetDPID() + " - ";
+                        sw = s;
+                    }
+                }
+                for (String stin : sw.getIp_list()) {
+                    SubnetUtils utils = new SubnetUtils(stin);
+                    if (utils.getInfo().isInRange(dst_ip)) {
+                        x = false;
+
+                    }
+                }
+                if (x) {
+                    if (sw.getIp_default_list().size() > 0) {
+                        for (SDNswitchRoute sr : sw.getIp_default_list()) {
+                            SubnetUtils utils = new SubnetUtils(sr.getDestination());
+                            if (utils.getInfo().isInRange(dst_ip)) {
+                                src_ip = sr.getGateway();
+                            }
+                        }
+
+                    } else {
+                        src_ip = sw.getIp_default_list().get(0).getGateway();
+                    }
+                }
+            }
+        }
+       /* if(src.equals("h1") && dst.equals("h2")){
+            route_string="h1 ->s1 ->s2 ->h2";
+        }else if(src.equals("h1") && dst.equals("h3")){
+            route_string="h1 ->s1 ->s2 ->s3 ->h3";
+        } else if (src.equals("h2") && dst.equals("h3")){
+            route_string="h2 ->s2 ->s3 ->h3";
+        }else if (src.equals("h2") && dst.equals("h1")){
+            route_string="h2 ->s2 ->s1 ->h1";
+        }else if (src.equals("h3") && dst.equals("h2")){
+            route_string="h3 ->s3 ->s2 ->h2";
+        } else if (src.equals("h3") && dst.equals("h1")){
+            route_string="h3 ->s3 ->s2 ->s1 ->h1";
+        }*/
+
 
         // TODO: 12/12/16 Return String containing routing path
 
-        return route_string;
+        return route_string + dst;
     }
 }
