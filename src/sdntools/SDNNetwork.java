@@ -47,7 +47,7 @@ public class SDNNetwork {
     private String SDNLinks = "/v1.0/topology/links";
     private String SDNrouter = "/router/";
 
-    public SDNNetwork (String connection_url, Graph graph) {
+    public SDNNetwork(String connection_url, Graph graph) {
         this.sdn_connector = new SDNConnector(connection_url);
         this.graph = graph;
         this.CreateSDNNetwork();
@@ -57,21 +57,23 @@ public class SDNNetwork {
         SDNSwitch s = GetSDNSwitch(guid);
 
 
-        if (s == null) { return "Object not found."; }
+        if (s == null) {
+            return "Object not found.";
+        }
         String port_string = "";
         String route = "";
         String ip = "";
 
-        for (SDNPort p: s.GetPortList()) {
+        for (SDNPort p : s.GetPortList()) {
             String port_info = String.format(
                     "Name:\n" +
-                    "%s\n" +
-                    "HW Address:\n" +
-                    "%s\n" +
-                    "Port number:\n" +
-                    "%s\n" +
-                    "DPID:\n" +
-                    "%s\n",
+                            "%s\n" +
+                            "HW Address:\n" +
+                            "%s\n" +
+                            "Port number:\n" +
+                            "%s\n" +
+                            "DPID:\n" +
+                            "%s\n",
                     p.getName(),
                     p.getHwAddr(),
                     p.getPortNo(),
@@ -84,11 +86,11 @@ public class SDNNetwork {
         for (SDNswitchRoute sr : s.getIp_default_list()) {
             String route_info = String.format(
                     "ID :" +
-                    "%s\n" +
-                    "Destination: " +
-                    "%s\n" +
-                    "Gateway: " +
-                    "%s\n\n",
+                            "%s\n" +
+                            "Destination: " +
+                            "%s\n" +
+                            "Gateway: " +
+                            "%s\n\n",
                     sr.getId(),
                     sr.getDestination(),
                     sr.getGateway()
@@ -98,7 +100,7 @@ public class SDNNetwork {
         for (String str : s.getIp_list()) {
             String ip_info = String.format(
                     "address:\n" +
-                    "%s\n",
+                            "%s\n",
                     str
             );
             ip += ip_info;
@@ -106,13 +108,13 @@ public class SDNNetwork {
 
         String out = String.format(
                 "GUID:\n" +
-                "%s\n\n" +
-                "Ports:\n" +
-                "%s\n\n" +
-                "Route:\n" +
-                "%s\n\n" +
-                "Address:\n" +
-                "%s\n\n",
+                        "%s\n\n" +
+                        "Ports:\n" +
+                        "%s\n\n" +
+                        "Route:\n" +
+                        "%s\n\n" +
+                        "Address:\n" +
+                        "%s\n\n",
                 s.GetDPID(),
                 port_string,
                 route,
@@ -125,28 +127,30 @@ public class SDNNetwork {
     public String GetFormattedInfoSDNHost(String mac) {
         SDNHost h = GetSDNHost(mac);
 
-        if (h == null) { return "Object not found."; }
+        if (h == null) {
+            return "Object not found.";
+        }
 
         String ipv4_text = "";
         String ipv6_text = "";
 
-        for (String ip: h.getIpv4()) {
+        for (String ip : h.getIpv4()) {
             ipv4_text += ip + "\n";
         }
 
-        for (String ip: h.getIpv6()) {
+        for (String ip : h.getIpv6()) {
             ipv6_text += ip + "\n";
         }
 
         String port_info = String.format(
                 "Name:\n" +
-                "%s\n" +
-                "HW Address:\n" +
-                "%s\n" +
-                "Port number:\n" +
-                "%s\n" +
-                "DPID:\n" +
-                "%s\n",
+                        "%s\n" +
+                        "HW Address:\n" +
+                        "%s\n" +
+                        "Port number:\n" +
+                        "%s\n" +
+                        "DPID:\n" +
+                        "%s\n",
                 h.getPort().getName(),
                 h.getPort().getHwAddr(),
                 h.getPort().getPortNo(),
@@ -155,13 +159,13 @@ public class SDNNetwork {
 
         String out = String.format(
                 "MAC:\n" +
-                "%s\n\n" +
-                "Port:\n" +
-                "%s\n\n" +
-                "IPv4:\n" +
-                "%s\n\n" +
-                "IPv6:\n" +
-                "%s\n\n",
+                        "%s\n\n" +
+                        "Port:\n" +
+                        "%s\n\n" +
+                        "IPv4:\n" +
+                        "%s\n\n" +
+                        "IPv6:\n" +
+                        "%s\n\n",
                 h.getMac(),
                 port_info,
                 ipv4_text,
@@ -189,7 +193,7 @@ public class SDNNetwork {
         return null;
     }
 
-    private void CreateSDNNetwork () {
+    private void CreateSDNNetwork() {
         this.LoadSDNNetwork();
         this.DrawDNSNetwork();
     }
@@ -203,17 +207,17 @@ public class SDNNetwork {
     private void DrawDNSNetwork() {
         int i = 0;
 
-        for (SDNSwitch sw :switch_list) {
+        for (SDNSwitch sw : switch_list) {
             this.graph.addNode(sw.GetDPID());
             this.graph.getNode(sw.GetDPID()).addAttribute("ui.label", sw.GetDPID());
             this.graph.getNode(sw.GetDPID()).addAttribute("ui.class", "switch");
         }
 
-        for (SDNLink lnk :link_list) {
+        for (SDNLink lnk : link_list) {
             this.graph.addEdge("link" + i++, lnk.GetDstDPID(), lnk.GetSrcDPID());
         }
 
-        for (SDNHost hst :host_list) {
+        for (SDNHost hst : host_list) {
             this.graph.addNode(hst.getMac());
             this.graph.getNode(hst.getMac()).addAttribute("ui.label", hst.getMac());
             this.graph.addEdge("link" + i++, hst.getPort().getDPID(), hst.getMac());
@@ -230,7 +234,9 @@ public class SDNNetwork {
         try {
             JSONArray json_switches = this.sdn_connector.GetSDNJsonArray(SDNSwitches);
 
-            if (json_switches == null) { throw new JSONException("JSON Array Empty"); }
+            if (json_switches == null) {
+                throw new JSONException("JSON Array Empty");
+            }
 
             int swc_l = json_switches.length();
 
@@ -290,8 +296,7 @@ public class SDNNetwork {
                     switch_list.add(tmp_switch);
                 }
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             System.out.println("Error while parsing switches:\n" + e);
         }
     }
@@ -301,7 +306,9 @@ public class SDNNetwork {
             JSONArray json_hosts = this.sdn_connector.GetSDNJsonArray(SDNHosts);
             JSONArray json_tmp = this.sdn_connector.GetSDNJsonArray(SDNHosts);
 
-            if (json_hosts == null || json_tmp == null) { throw new JSONException("JSON Array Empty"); }
+            if (json_hosts == null || json_tmp == null) {
+                throw new JSONException("JSON Array Empty");
+            }
 
             int hst_l = json_hosts.length();
 
@@ -329,29 +336,28 @@ public class SDNNetwork {
                         tmp_port_obj.getString("port_no"),
                         tmp_port_obj.getString("dpid")
                 );
-                if(tmp_port_obj.getString("name").contains("eth1")){
+                if (tmp_port_obj.getString("name").contains("eth1")) {
                     SDNHost tmp_host = new SDNHost(tmp_port, tmp_mac, tmp_ipv4_arr, tmp_ipv6_arr);
 
                     System.out.print("Adding host mac: " + tmp_host.getMac());
                     System.out.println(" Connected to dpid: " + tmp_port.getDPID());
                     this.host_list.add(tmp_host);
-                }
-                else{
+                } else {
                     JSONObject tmp_link_json = json_hosts.getJSONObject(i);
                     JSONObject tmp_link_src = tmp_link_json.getJSONObject("port");
-                    SDNPort tmp_dst=null;
+                    SDNPort tmp_dst = null;
                     SDNPort tmp_src = new SDNPort(
                             tmp_link_src.getString("hw_addr"),
                             tmp_link_src.getString("name"),
                             tmp_link_src.getString("port_no"),
                             tmp_link_src.getString("dpid")
                     );
-                    String mac=tmp_link_json.getString("mac");
+                    String mac = tmp_link_json.getString("mac");
 
-                    for(int m=0;m<hst_l;m++){
+                    for (int m = 0; m < hst_l; m++) {
                         JSONObject tmp_link_json2 = json_tmp.getJSONObject(m);
                         JSONObject tmp_link_dsc = tmp_link_json2.getJSONObject("port");
-                        if(tmp_link_dsc.getString("hw_addr").equals(mac)){
+                        if (tmp_link_dsc.getString("hw_addr").equals(mac)) {
                             tmp_dst = new SDNPort(
                                     tmp_link_dsc.getString("hw_addr"),
                                     tmp_link_dsc.getString("name"),
@@ -366,8 +372,7 @@ public class SDNNetwork {
                     }
                 }
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             System.out.println("Error while parsing switches:\n" + e);
         }
     }
@@ -376,7 +381,9 @@ public class SDNNetwork {
         try {
             JSONArray json_links = this.sdn_connector.GetSDNJsonArray(SDNLinks);
 
-            if (json_links == null) { throw new JSONException("JSON Array Empty"); }
+            if (json_links == null) {
+                throw new JSONException("JSON Array Empty");
+            }
 
             int lnk_l = json_links.length();
 
@@ -401,19 +408,18 @@ public class SDNNetwork {
                 SDNLink tmp_link = new SDNLink(tmp_src, tmp_dst);
                 link_list.add(tmp_link);
             }
-        }
-        catch (JSONException e) {
+        } catch (JSONException e) {
             System.out.println("Error while parsing links:\n" + e);
         }
     }
 
-    public void sendSDNPost(String url,String[] key,String[] ipAdd) throws IOException, JSONException {
+    public void sendSDNPost(String url, String[] key, String[] ipAdd) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
-        for(int i=0;i<key.length;i++){
+        for (int i = 0; i < key.length; i++) {
             jsonObject.accumulate(key[i], ipAdd[i]);
         }
         String json = jsonObject.toString();
-        sdn_connector.setSDNcommand(url,json);
+        sdn_connector.setSDNcommand(url, json);
     }
 
     public String getRoutingString(String src, String dst) {
@@ -468,28 +474,29 @@ public class SDNNetwork {
                         sw = s;
                     }
                 }
-                for (String stin : sw.getIp_list()) {
-                    SubnetUtils utils = new SubnetUtils(stin);
-                    if (utils.getInfo().isInRange(dst_ip)) {
-                        x = false;
+            }
+            for (String stin : sw.getIp_list()) {
+                SubnetUtils utils = new SubnetUtils(stin);
+                if (utils.getInfo().isInRange(dst_ip)) {
+                    x = false;
 
-                    }
-                }
-                if (x) {
-                    if (sw.getIp_default_list().size() > 0) {
-                        for (SDNswitchRoute sr : sw.getIp_default_list()) {
-                            SubnetUtils utils = new SubnetUtils(sr.getDestination());
-                            if (utils.getInfo().isInRange(dst_ip)) {
-                                src_ip = sr.getGateway();
-                            }
-                        }
-
-                    } else {
-                        src_ip = sw.getIp_default_list().get(0).getGateway();
-                    }
                 }
             }
+            if (x) {
+                if (sw.getIp_default_list().size() > 0) {
+                    for (SDNswitchRoute sr : sw.getIp_default_list()) {
+                        SubnetUtils utils = new SubnetUtils(sr.getDestination());
+                        if (utils.getInfo().isInRange(dst_ip)) {
+                            src_ip = sr.getGateway();
+                    }
+                }
+
+                } else {
+                    src_ip = sw.getIp_default_list().get(0).getGateway();
+            }
         }
+        }
+
        /* if(src.equals("h1") && dst.equals("h2")){
             route_string="h1 ->s1 ->s2 ->h2";
         }else if(src.equals("h1") && dst.equals("h3")){
